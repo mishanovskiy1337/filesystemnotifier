@@ -24,8 +24,6 @@ namespace FileSystemNotifier_Form
             scannerSettings.AllowScannRenamed = renamedBox.Checked;
             PopupNotifierSettings popupSettings = new PopupNotifierSettings
             {
-                AnimationDuration = 3,
-                AnimationInterval = 3,
                 Size = 15
             };
             Directory.GetLogicalDrives().ToList().ForEach(x => Task.Factory.StartNew(() => 

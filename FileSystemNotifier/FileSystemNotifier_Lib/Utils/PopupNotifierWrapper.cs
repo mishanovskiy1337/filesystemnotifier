@@ -13,8 +13,6 @@ namespace FileSystemNotifier_Lib
 
         private void ApplySettings(PopupNotifierSettings settings)
         {
-            _notifier.AnimationDuration = settings.AnimationDuration;
-            _notifier.AnimationInterval = settings.AnimationInterval;
             _notifier.ContentText = settings.ContentText;
             _notifier.TitleText = settings.TitleText;
         }
