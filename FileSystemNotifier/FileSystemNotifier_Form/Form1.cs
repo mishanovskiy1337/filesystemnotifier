@@ -14,15 +14,20 @@ namespace FileSystemNotifier_Form
             InitializeComponent();
         }
 
-        private void startScanning_Click(object sender, EventArgs e)
+        private void StartScanning_Click(object sender, EventArgs e)
         {
             this.Visible = false;
-            this.ShowInTaskbar = false;
-            // apply some settings
             ScannerSettings scannerSettings = new ScannerSettings();
             scannerSettings.AllowScannChange = true;
-            PopupNotifierSettings popupSettings = new PopupNotifierSettings();
-            // apply some settings
+            scannerSettings.AllowScannCreate = true;
+            scannerSettings.AllowScannDelete = true;
+            scannerSettings.AllowScannRenamed = true;
+            PopupNotifierSettings popupSettings = new PopupNotifierSettings
+            {
+                AnimationDuration = 3,
+                AnimationInterval = 3,
+                Size = 15
+            };
             Directory.GetLogicalDrives().ToList().ForEach(x => Task.Factory.StartNew(() => 
             {
                 scannerSettings.Path = x;

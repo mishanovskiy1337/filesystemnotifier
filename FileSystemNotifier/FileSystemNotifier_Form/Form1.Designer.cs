@@ -40,7 +40,7 @@
             this.startScanning.TabIndex = 0;
             this.startScanning.Text = "Start ";
             this.startScanning.UseVisualStyleBackColor = true;
-            this.startScanning.Click += new System.EventHandler(this.startScanning_Click);
+            this.startScanning.Click += new System.EventHandler(this.StartScanning_Click);
             // 
             // label1
             // 

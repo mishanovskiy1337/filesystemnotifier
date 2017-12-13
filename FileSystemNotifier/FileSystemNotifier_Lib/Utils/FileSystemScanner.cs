@@ -1,8 +1,10 @@
 ﻿using System.IO;
+using System.Security.Permissions;
 using System.Windows.Forms;
 
 namespace FileSystemNotifier_Lib
 {
+    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public class FileSystemScanner
     {
         private FileSystemWatcher _watcher;
@@ -38,7 +40,7 @@ namespace FileSystemNotifier_Lib
             _invokerForm.Invoke((MethodInvoker)delegate 
             {
                 PopupNotifierWrapper popupNotifierWrapper = new PopupNotifierWrapper(_popupNotifierSettings);
-                _popupNotifierSettings.ContentText = string.Format("Item {0} have been {1}", e.FullPath, e.ChangeType);
+                _popupNotifierSettings.ContentText = string.Format("Item {0} has been {1}", e.FullPath, e.ChangeType);
                 _popupNotifierSettings.TitleText = e.ChangeType.ToString();
                 popupNotifierWrapper.PopupMessage();
             });
@@ -55,6 +57,7 @@ namespace FileSystemNotifier_Lib
             });
         }
 
+        
         public void Start()
         {
             _watcher.EnableRaisingEvents = true;
