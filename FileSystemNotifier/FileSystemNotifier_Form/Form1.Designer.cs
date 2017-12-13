@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.startScanning = new System.Windows.Forms.Button();
             this.createdBox = new System.Windows.Forms.CheckBox();
             this.deletedBox = new System.Windows.Forms.CheckBox();
@@ -106,6 +107,7 @@
             this.Controls.Add(this.deletedBox);
             this.Controls.Add(this.createdBox);
             this.Controls.Add(this.startScanning);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "File system notifier";
             this.ResumeLayout(false);
