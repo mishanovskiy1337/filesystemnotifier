@@ -13,7 +13,7 @@ namespace FileSystemNotifier_Lib
 
         private void ApplySettings(PopupNotifierSettings settings)
         {
-
+            // realize apply settings
         }
 
         public void PopupMessage() => _notifier.Popup();

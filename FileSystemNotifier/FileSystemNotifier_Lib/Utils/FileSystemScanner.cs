@@ -38,6 +38,8 @@ namespace FileSystemNotifier_Lib
             _invokerForm.Invoke((MethodInvoker)delegate 
             {
                 PopupNotifierWrapper popupNotifierWrapper = new PopupNotifierWrapper(_popupNotifierSettings);
+                _popupNotifierSettings.ContentText = string.Format("Item {0} have been {1}", e.FullPath, e.ChangeType);
+                _popupNotifierSettings.TitleText = e.ChangeType.ToString();
                 popupNotifierWrapper.PopupMessage();
             });
         }
@@ -47,6 +49,8 @@ namespace FileSystemNotifier_Lib
             _invokerForm.Invoke((MethodInvoker)delegate 
             {
                 PopupNotifierWrapper popupNotifierWrapper = new PopupNotifierWrapper(_popupNotifierSettings);
+                _popupNotifierSettings.ContentText = string.Format("Item {0} renamed to {1}", e.OldFullPath, e.FullPath);
+                _popupNotifierSettings.TitleText = e.ChangeType.ToString();
                 popupNotifierWrapper.PopupMessage();
             });
         }

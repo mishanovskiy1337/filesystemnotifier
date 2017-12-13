@@ -20,6 +20,7 @@ namespace FileSystemNotifier_Form
             this.ShowInTaskbar = false;
             // apply some settings
             ScannerSettings scannerSettings = new ScannerSettings();
+            scannerSettings.AllowScannChange = true;
             PopupNotifierSettings popupSettings = new PopupNotifierSettings();
             // apply some settings
             Directory.GetLogicalDrives().ToList().ForEach(x => Task.Factory.StartNew(() => 
@@ -31,8 +32,15 @@ namespace FileSystemNotifier_Form
 
         private void ScannerLauncher(ScannerSettings scannerSettings, PopupNotifierSettings popupNotifierSettings)
         {
-            FileSystemScanner scanner = new FileSystemScanner(this, scannerSettings, popupNotifierSettings);
-            scanner.Start();
+            try
+            {
+                FileSystemScanner scanner = new FileSystemScanner(this, scannerSettings, popupNotifierSettings);
+                scanner.Start();
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }
