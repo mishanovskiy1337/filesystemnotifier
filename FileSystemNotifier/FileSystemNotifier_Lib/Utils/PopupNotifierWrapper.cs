@@ -1,15 +1,13 @@
 ﻿using Tulpep.NotificationWindow;
-using FileSystemNotifier_Lib.Models;
-namespace FileSystemNotifier_Lib.Utils
+namespace FileSystemNotifier_Lib
 {
     public class PopupNotifierWrapper
     {
         private PopupNotifier _notifier;
 
-        public PopupNotifierWrapper(PopupNotifier notifier, PopupNotifierSettings notifierSettings)
+        public PopupNotifierWrapper(PopupNotifierSettings notifierSettings)
         {
-            _notifier = notifier;
-            
+            _notifier = new PopupNotifier();
             ApplySettings(notifierSettings);
         }
 

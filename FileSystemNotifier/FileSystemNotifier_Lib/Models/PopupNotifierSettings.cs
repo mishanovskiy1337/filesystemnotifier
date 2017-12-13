@@ -1,4 +1,4 @@
-﻿namespace FileSystemNotifier_Lib.Models
+﻿namespace FileSystemNotifier_Lib
 {
     public class PopupNotifierSettings
     {

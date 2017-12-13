@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using FileSystemNotifier_Lib.Models;
 using System.Windows.Forms;
 
 namespace FileSystemNotifier_Lib
@@ -8,10 +7,11 @@ namespace FileSystemNotifier_Lib
     {
         private FileSystemWatcher _watcher;
         private Form _invokerForm;
-
-        public FileSystemScanner(Form invokerForm, ScannerSettings settings)
+        private PopupNotifierSettings _popupNotifierSettings;
+        public FileSystemScanner(Form invokerForm, ScannerSettings settings, PopupNotifierSettings popupSettings)
         {
             _invokerForm = invokerForm;
+            _popupNotifierSettings = popupSettings;
             _watcher = new FileSystemWatcher
             {
                 NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Security,
@@ -22,6 +22,7 @@ namespace FileSystemNotifier_Lib
 
         private void ApplySettings(ScannerSettings settings)
         {
+            _watcher.Path = settings.Path;
             if (settings.AllowScannCreate)
                 _watcher.Created += OnChange;
             if (settings.AllowScannDelete)
@@ -34,12 +35,20 @@ namespace FileSystemNotifier_Lib
 
         private void OnChange(object sender, FileSystemEventArgs e)
         {
-            _invokerForm.Invoke((MethodInvoker)delegate { });
+            _invokerForm.Invoke((MethodInvoker)delegate 
+            {
+                PopupNotifierWrapper popupNotifierWrapper = new PopupNotifierWrapper(_popupNotifierSettings);
+                popupNotifierWrapper.PopupMessage();
+            });
         }
 
         private void OnRenamed(object sender, RenamedEventArgs e)
         {
-            _invokerForm.Invoke((MethodInvoker)delegate { });
+            _invokerForm.Invoke((MethodInvoker)delegate 
+            {
+                PopupNotifierWrapper popupNotifierWrapper = new PopupNotifierWrapper(_popupNotifierSettings);
+                popupNotifierWrapper.PopupMessage();
+            });
         }
 
         public void Start()

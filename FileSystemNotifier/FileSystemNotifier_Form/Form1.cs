@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FileSystemNotifier_Lib;
@@ -22,7 +18,21 @@ namespace FileSystemNotifier_Form
         {
             this.Visible = false;
             this.ShowInTaskbar = false;
-            Task.Factory.StartNew(() => {  });
+            // apply some settings
+            ScannerSettings scannerSettings = new ScannerSettings();
+            PopupNotifierSettings popupSettings = new PopupNotifierSettings();
+            // apply some settings
+            Directory.GetLogicalDrives().ToList().ForEach(x => Task.Factory.StartNew(() => 
+            {
+                scannerSettings.Path = x;
+                ScannerLauncher(scannerSettings, popupSettings);
+            })); 
+        }
+
+        private void ScannerLauncher(ScannerSettings scannerSettings, PopupNotifierSettings popupNotifierSettings)
+        {
+            FileSystemScanner scanner = new FileSystemScanner(this, scannerSettings, popupNotifierSettings);
+            scanner.Start();
         }
     }
 }
