@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FileSystemNotifier_Lib;
 
 namespace FileSystemNotifier_Form
 {
@@ -15,6 +16,13 @@ namespace FileSystemNotifier_Form
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void startScanning_Click(object sender, EventArgs e)
+        {
+            this.Visible = false;
+            this.ShowInTaskbar = false;
+            Task.Factory.StartNew(() => {  });
         }
     }
 }
