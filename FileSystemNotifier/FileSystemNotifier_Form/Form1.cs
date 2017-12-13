@@ -18,10 +18,10 @@ namespace FileSystemNotifier_Form
         {
             this.Visible = false;
             ScannerSettings scannerSettings = new ScannerSettings();
-            scannerSettings.AllowScannChange = true;
-            scannerSettings.AllowScannCreate = true;
-            scannerSettings.AllowScannDelete = true;
-            scannerSettings.AllowScannRenamed = true;
+            scannerSettings.AllowScannChange = changedBox.Checked;
+            scannerSettings.AllowScannCreate = createdBox.Checked;
+            scannerSettings.AllowScannDelete = deletedBox.Checked;
+            scannerSettings.AllowScannRenamed = renamedBox.Checked;
             PopupNotifierSettings popupSettings = new PopupNotifierSettings
             {
                 AnimationDuration = 3,
