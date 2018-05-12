@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Permissions;
 using System.Windows.Forms;
@@ -11,36 +12,51 @@ namespace FileSystemNotifier_Lib
         private FileSystemWatcher _watcher;
         private Form _invokerForm;
         private PopupNotifierSettings _popupNotifierSettings;
-        private FileFixatorService _fileFixatorService;
-        public FileSystemScanner(Form invokerForm, ScannerSettings settings, PopupNotifierSettings popupSettings)
+        private List<string> _scannerResultsLocalStorage;
+        private ScanningResultsLogger _scanningResultsLogger;
+
+        public FileSystemScanner(Form invokerForm, string scannDirectoryPath, ScanningResultsLogger scanningResultsLogger)
         {
             _invokerForm = invokerForm;
-            _popupNotifierSettings = popupSettings;
-            _fileFixatorService = new FileFixatorService(Directory.GetCurrentDirectory() + @"\" + settings.Path.Replace(@"\", "").Replace(":", "") + ".txt"); // path to file
             _watcher = new FileSystemWatcher
             {
                 NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Security,
-                IncludeSubdirectories = true
+                IncludeSubdirectories = true,
+                Path = scannDirectoryPath
             };
-            ApplySettings(settings);
+
+            _scannerResultsLocalStorage = new List<string>();
+            _scanningResultsLogger = scanningResultsLogger;
         }
 
-        private void ApplySettings(ScannerSettings settings)
+        public void ApplySettings(ScannerSettings settings, PopupNotifierSettings popupSettings)
         {
-            _watcher.Path = settings.Path;
             if (settings.AllowScannCreate)
                 _watcher.Created += OnChange;
+            else
+                _watcher.Created -= OnChange;
+
             if (settings.AllowScannDelete)
                 _watcher.Deleted += OnChange;
+            else
+                _watcher.Deleted -= OnChange;
+
             if (settings.AllowScannChange)
                 _watcher.Changed += OnChange;
+            else
+                _watcher.Changed -= OnChange;
+
             if (settings.AllowScannRenamed)
                 _watcher.Renamed += OnRenamed;
+            else
+                _watcher.Renamed -= OnRenamed;
+
+            _popupNotifierSettings = popupSettings;
         }
 
         private void OnChange(object sender, FileSystemEventArgs e)
         {
-            string handledItemInfo = string.Format("Item {0} has been {1}", e.FullPath, e.ChangeType);
+            string handledItemInfo = $"Item {e.FullPath} has been {e.ChangeType}";
             _invokerForm.Invoke((MethodInvoker)delegate 
             {
                 PopupNotifierWrapper popupNotifierWrapper = new PopupNotifierWrapper(_popupNotifierSettings);
@@ -48,12 +64,12 @@ namespace FileSystemNotifier_Lib
                 _popupNotifierSettings.TitleText = e.ChangeType.ToString();
                 popupNotifierWrapper.PopupMessage();
             });
-            _fileFixatorService.Fixate(string.Format("{0}\t{1}\t{2}", e.FullPath, e.ChangeType, DateTime.Now));
+            _scannerResultsLocalStorage.Add($"{e.FullPath}\t|\t{e.ChangeType}\t|\t{DateTime.Now}");
         }
 
         private void OnRenamed(object sender, RenamedEventArgs e)
         {
-            string handledItemInfo = string.Format("Item {0} renamed to {1}", e.OldFullPath, e.FullPath);
+            string handledItemInfo = $"Item {e.OldFullPath} renamed to {e.FullPath}";
             _invokerForm.Invoke((MethodInvoker)delegate 
             {
                 PopupNotifierWrapper popupNotifierWrapper = new PopupNotifierWrapper(_popupNotifierSettings);
@@ -61,12 +77,21 @@ namespace FileSystemNotifier_Lib
                 _popupNotifierSettings.TitleText = e.ChangeType.ToString();
                 popupNotifierWrapper.PopupMessage();
             });
-            _fileFixatorService.Fixate(string.Format("{0}\t{1}\t{2}", e.OldFullPath, e.ChangeType, DateTime.Now));
+            _scannerResultsLocalStorage.Add($"{e.OldFullPath}\t|\t{e.ChangeType}\t|\t{DateTime.Now}");
         }
         
-        public void Start()
+        public void StartStopWorker(bool enableRaisingEvents)
         {
-            _watcher.EnableRaisingEvents = true;
+            _watcher.EnableRaisingEvents = enableRaisingEvents;
+            if (!enableRaisingEvents)
+            {
+                _scannerResultsLocalStorage.ForEach(result => 
+                {
+                    _scanningResultsLogger.Write(result);
+                });
+
+                _scannerResultsLocalStorage.Clear();
+            }              
         }
     }
 }
