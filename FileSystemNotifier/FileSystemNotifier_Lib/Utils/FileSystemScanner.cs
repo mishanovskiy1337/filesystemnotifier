@@ -6,14 +6,18 @@ using System.Windows.Forms;
 
 namespace FileSystemNotifier_Lib
 {
+    /// <summary>
+    /// FileSystemWatcher library wrapper that allows to launch which type of event we should handle,
+    /// notification filters and start the wathcher.
+    /// </summary>
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public class FileSystemScanner
     {
-        private FileSystemWatcher _watcher;
-        private Form _invokerForm;
-        private PopupNotifierSettings _popupNotifierSettings;
-        private List<string> _scannerResultsLocalStorage;
-        private ScanningResultsLogger _scanningResultsLogger;
+        private FileSystemWatcher _watcher; // file system watcher instance
+        private Form _invokerForm; // UI form that invokes the Watcher
+        private PopupNotifierSettings _popupNotifierSettings; // base settings for the PopUp, that allows to notify user about file changing
+        private List<string> _scannerResultsLocalStorage; // list of system changes
+        private ScanningResultsLogger _scanningResultsLogger; // File system scanner internal logger, that allows to collect all changes in text file
 
         public FileSystemScanner(Form invokerForm, string scannDirectoryPath, ScanningResultsLogger scanningResultsLogger)
         {
@@ -29,6 +33,11 @@ namespace FileSystemNotifier_Lib
             _scanningResultsLogger = scanningResultsLogger;
         }
 
+        /// <summary>
+        /// Launch settings for the watcher
+        /// </summary>
+        /// <param name="settings">scanner settings(from UI)</param>
+        /// <param name="popupSettings">popup settings(from UI)</param>
         public void ApplySettings(ScannerSettings settings, PopupNotifierSettings popupSettings)
         {
             if (settings.AllowScannCreate)
@@ -54,6 +63,10 @@ namespace FileSystemNotifier_Lib
             _popupNotifierSettings = popupSettings;
         }
 
+        /// <summary>
+        /// File/directory created/modified/deleted event handler
+        /// Allow to notify user with a PopUp and write data to log
+        /// </summary>
         private void OnChange(object sender, FileSystemEventArgs e)
         {
             string handledItemInfo = $"Item {e.FullPath} has been {e.ChangeType}";
@@ -67,6 +80,9 @@ namespace FileSystemNotifier_Lib
             _scannerResultsLocalStorage.Add($"{e.FullPath}\t|\t{e.ChangeType}\t|\t{DateTime.Now}");
         }
 
+        /// <summary>
+        /// File/directory renamed event handler
+        /// </summary>
         private void OnRenamed(object sender, RenamedEventArgs e)
         {
             string handledItemInfo = $"Item {e.OldFullPath} renamed to {e.FullPath}";
@@ -80,9 +96,16 @@ namespace FileSystemNotifier_Lib
             _scannerResultsLocalStorage.Add($"{e.OldFullPath}\t|\t{e.ChangeType}\t|\t{DateTime.Now}");
         }
         
+        /// <summary>
+        /// Start/stop button has been clicked on UI by user
+        /// Allows to handle when we should start/stop file system watcher
+        /// </summary>
+        /// <param name="enableRaisingEvents">start or stop watcher</param>
         public void StartStopWorker(bool enableRaisingEvents)
         {
             _watcher.EnableRaisingEvents = enableRaisingEvents;
+
+            // if user clicked Stop button - write all the collected data in Log file.
             if (!enableRaisingEvents)
             {
                 _scannerResultsLocalStorage.ForEach(result => 

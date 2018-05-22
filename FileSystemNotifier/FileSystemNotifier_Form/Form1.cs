@@ -8,14 +8,14 @@ using System.Collections.Generic;
 
 namespace FileSystemNotifier_Form
 {
-    public enum ApplicationMode
-    {
-        Scanning = 1,
-        Stopped = 2
-    }
-
     public partial class Form1 : Form
     {
+        internal enum ApplicationMode
+        {
+            Scanning = 1,
+            Stopped = 2
+        }
+
         private ApplicationMode applicationMode;
         private List<FileSystemScanner> scanners;
         private ScanningResultsLogger scanningResultsLogger;
@@ -87,7 +87,7 @@ namespace FileSystemNotifier_Form
             }
             catch (Exception)
             {
-
+                // write exception into the log.
             }
         }
     }

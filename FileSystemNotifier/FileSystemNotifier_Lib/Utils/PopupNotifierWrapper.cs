@@ -1,9 +1,13 @@
 ﻿using Tulpep.NotificationWindow;
+
 namespace FileSystemNotifier_Lib
 {
+    /// <summary>
+    /// Wrapper over the PopupNotifier that allows user to see the notification about changes in file system
+    /// </summary>
     public class PopupNotifierWrapper
     {
-        private PopupNotifier _notifier;
+        private PopupNotifier _notifier; // notifier instance
 
         public PopupNotifierWrapper(PopupNotifierSettings notifierSettings)
         {

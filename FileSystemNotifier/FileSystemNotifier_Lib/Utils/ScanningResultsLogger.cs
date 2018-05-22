@@ -7,6 +7,9 @@ namespace FileSystemNotifier_Lib
         void Write(string data);
     }
 
+    /// <summary>
+    /// To write all the collected data into the text file
+    /// </summary>
     public class ScanningResultsLogger : IApplicationLogger
     {
         private string _path;
@@ -25,6 +28,9 @@ namespace FileSystemNotifier_Lib
         }
     }
 
+    /// <summary>
+    /// To write all the exceptions data into the text file
+    /// </summary>
     public class ExceptionLogger : IApplicationLogger
     {
         public void Write(string data)
