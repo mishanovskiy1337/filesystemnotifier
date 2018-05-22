@@ -20,10 +20,12 @@ namespace FileSystemNotifier_Form
         private List<FileSystemScanner> scanners;
         private ScanningResultsLogger scanningResultsLogger;
         private ExceptionLogger exceptionLogger;
+        private string _loggerFile;
         public Form1()
         {
             InitializeComponent();
-            scanningResultsLogger = new ScanningResultsLogger(@"c:\temp.txt");
+            startScanning.Enabled = false;
+            scanningResultsLogger = new ScanningResultsLogger(_loggerFile);
             exceptionLogger = new ExceptionLogger();
             scanners = new List<FileSystemScanner>();
             applicationMode = ApplicationMode.Stopped;
@@ -89,6 +91,21 @@ namespace FileSystemNotifier_Form
             {
                 // write exception into the log.
             }
+        }
+
+        private void selectFolderBtn_Click(object sender, EventArgs e)
+        {
+            var result = folderBrowserDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                var directoryPath = folderBrowserDialog1.SelectedPath;
+                _loggerFile = directoryPath + "results.txt";
+                File.Create(_loggerFile).Dispose();
+                scanningResultsLogger.SetLogFile(_loggerFile);
+            }
+
+            startScanning.Enabled = true;
+            selectFolderBtn.Enabled = false;
         }
     }
 }

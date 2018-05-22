@@ -103,18 +103,25 @@ namespace FileSystemNotifier_Lib
         /// <param name="enableRaisingEvents">start or stop watcher</param>
         public void StartStopWorker(bool enableRaisingEvents)
         {
-            _watcher.EnableRaisingEvents = enableRaisingEvents;
-
-            // if user clicked Stop button - write all the collected data in Log file.
-            if (!enableRaisingEvents)
+            try
             {
-                _scannerResultsLocalStorage.ForEach(result => 
-                {
-                    _scanningResultsLogger.Write(result);
-                });
+                _watcher.EnableRaisingEvents = enableRaisingEvents;
 
-                _scannerResultsLocalStorage.Clear();
-            }              
+                // if user clicked Stop button - write all the collected data in Log file.
+                if (!enableRaisingEvents)
+                {
+                    _scannerResultsLocalStorage.ForEach(result =>
+                    {
+                        _scanningResultsLogger.Write(result);
+                    });
+
+                    _scannerResultsLocalStorage.Clear();
+                }
+            }
+            catch (Exception)
+            {
+                // nothing to do..
+            }
         }
     }
 }

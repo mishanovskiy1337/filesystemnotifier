@@ -19,6 +19,11 @@ namespace FileSystemNotifier_Lib
             _path = path;
         }
 
+        public void SetLogFile(string path)
+        {
+            _path = path;
+        }
+
         public void Write(string data)
         {
             using (StreamWriter file = File.AppendText(_path))
