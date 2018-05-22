@@ -35,11 +35,14 @@
             this.changedBox = new System.Windows.Forms.CheckBox();
             this.renamedBox = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.label2 = new System.Windows.Forms.Label();
+            this.selectFolderBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // startScanning
             // 
-            this.startScanning.Location = new System.Drawing.Point(99, 216);
+            this.startScanning.Location = new System.Drawing.Point(109, 214);
             this.startScanning.Name = "startScanning";
             this.startScanning.Size = new System.Drawing.Size(75, 23);
             this.startScanning.TabIndex = 0;
@@ -96,11 +99,32 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "File system scanner settings:";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(27, 108);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(234, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Select folder where to store scanning results file:";
+            // 
+            // selectFolderBtn
+            // 
+            this.selectFolderBtn.Location = new System.Drawing.Point(99, 134);
+            this.selectFolderBtn.Name = "selectFolderBtn";
+            this.selectFolderBtn.Size = new System.Drawing.Size(94, 23);
+            this.selectFolderBtn.TabIndex = 7;
+            this.selectFolderBtn.Text = "Select folder";
+            this.selectFolderBtn.UseVisualStyleBackColor = true;
+            this.selectFolderBtn.Click += new System.EventHandler(this.selectFolderBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Controls.Add(this.selectFolderBtn);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.renamedBox);
             this.Controls.Add(this.changedBox);
@@ -123,6 +147,9 @@
         private System.Windows.Forms.CheckBox changedBox;
         private System.Windows.Forms.CheckBox renamedBox;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button selectFolderBtn;
     }
 }
 
