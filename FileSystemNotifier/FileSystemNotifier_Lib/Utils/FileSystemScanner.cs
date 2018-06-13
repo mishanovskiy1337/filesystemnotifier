@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FileSystemNotifier_Lib.Models;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Security.Permissions;
 using System.Windows.Forms;
@@ -17,9 +19,10 @@ namespace FileSystemNotifier_Lib
         private Form _invokerForm; // UI form that invokes the Watcher
         private PopupNotifierSettings _popupNotifierSettings; // base settings for the PopUp, that allows to notify user about file changing
         private List<string> _scannerResultsLocalStorage; // list of system changes
+        private BindingList<ScanResultViewModel> _scannerResults; // list of global system changes
         private ScanningResultsLogger _scanningResultsLogger; // File system scanner internal logger, that allows to collect all changes in text file
 
-        public FileSystemScanner(Form invokerForm, string scannDirectoryPath, ScanningResultsLogger scanningResultsLogger)
+        public FileSystemScanner(Form invokerForm, string scannDirectoryPath, ScanningResultsLogger scanningResultsLogger, BindingList<ScanResultViewModel> scannerResults)
         {
             _invokerForm = invokerForm;
             _watcher = new FileSystemWatcher
@@ -29,6 +32,7 @@ namespace FileSystemNotifier_Lib
                 Path = scannDirectoryPath
             };
 
+            _scannerResults = scannerResults;
             _scannerResultsLocalStorage = new List<string>();
             _scanningResultsLogger = scanningResultsLogger;
         }
@@ -76,6 +80,7 @@ namespace FileSystemNotifier_Lib
                 _popupNotifierSettings.ContentText = handledItemInfo;
                 _popupNotifierSettings.TitleText = e.ChangeType.ToString();
                 popupNotifierWrapper.PopupMessage();
+                _scannerResults.Add(new ScanResultViewModel { Path = e.FullPath, ChangeType = e.ChangeType.ToString(), Date = DateTime.Now.ToShortDateString() });
             });
             _scannerResultsLocalStorage.Add($"{e.FullPath}\t|\t{e.ChangeType}\t|\t{DateTime.Now}");
         }
@@ -92,6 +97,7 @@ namespace FileSystemNotifier_Lib
                 _popupNotifierSettings.ContentText = handledItemInfo;
                 _popupNotifierSettings.TitleText = e.ChangeType.ToString();
                 popupNotifierWrapper.PopupMessage();
+                _scannerResults.Add(new ScanResultViewModel { Path = e.OldFullPath, ChangeType = e.ChangeType.ToString(), Date = DateTime.Now.ToShortDateString() });
             });
             _scannerResultsLocalStorage.Add($"{e.OldFullPath}\t|\t{e.ChangeType}\t|\t{DateTime.Now}");
         }
